@@ -1,19 +1,47 @@
-//import {Role} from "./Role";
-import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import { Role } from "./role.entity";
+import {
+    PrimaryGeneratedColumn,
+    Column,
+    UpdateDateColumn,
+    CreateDateColumn,
+    Entity,
+    ManyToMany,
+    JoinTable
+} from 'typeorm';
 
-
+@Entity({
+    name: 'users'
+})
 export class User {
 
     @PrimaryGeneratedColumn('increment')
-    readonly id: bigint;
-    @Column('name')
+    readonly id: number;
+    @Column()
     readonly name: string;
-    @Column('login')
+    @Column()
     readonly login: string;
-    @Column('password')
+    @Column()
     readonly password: string;
-/*
-    readonly roles: Array<Role>;
-*/
+    @ManyToMany(() => Role, {eager: true})
+    @JoinTable({
+        name: 'user_roles',
+        joinColumn: {
+            name: 'user_id',
+            referencedColumnName: 'id'
+        },
+        inverseJoinColumn: {
+            name: 'role_id',
+            referencedColumnName: 'id'
+        }
+    })
+    readonly roles: Role[];
 
+
+    constructor(id: number, name: string, login: string, password: string, roles: Role[]) {
+        this.id = id;
+        this.name = name;
+        this.login = login;
+        this.password = password;
+        this.roles = roles;
+    }
 }
