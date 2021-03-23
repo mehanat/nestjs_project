@@ -43,7 +43,7 @@ class ConfigService {
 
             entities: ["dist/model/*.entity.js"],
 
-
+            logging: true,
             ssl: true,
             extra: {
                 ssl: {

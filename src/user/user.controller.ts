@@ -1,8 +1,20 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, ValidationPipe} from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseIntPipe,
+    Post,
+    Put,
+    UseFilters,
+    ValidationPipe
+} from '@nestjs/common';
 import { UserService } from "./user.service";
 import { DtoConverter } from "../model/dtoConverter";
 import {UserDto} from "../dto/userDto";
 import {User} from "../model/user.entity";
+import {HttpExceptionFilter} from "../exception.filter";
 
 @Controller('user')
 export class UserController {
@@ -19,6 +31,7 @@ export class UserController {
     }
 
     @Get('/:id')
+    @UseFilters(new HttpExceptionFilter())
     public async getById(@Param('id', new ParseIntPipe()) id) {
         return this.dtoConverter.convertUser(await this.serv.get(id));
     }

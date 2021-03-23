@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../model/user.entity';
 import {Role} from "../model/role.entity";
+import {CustomException} from "../custom.exception";
 
 
 @Injectable()
@@ -14,8 +15,12 @@ export class UserService {
         return await this.userRepository.find();
     }
 
-    public async get(id: number) {
-        return await this.userRepository.findOne(id);
+    public async get(id: number): Promise<User> {
+        const found = await this.userRepository.findOne(id);
+        if (!found) {
+            throw new CustomException(`Не найден ользователь с ИД = {id}`);
+        }
+        return found;
     }
 
     public async delete(id: number) {
